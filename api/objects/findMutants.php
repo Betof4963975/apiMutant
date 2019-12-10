@@ -15,6 +15,8 @@ class findMutants{
 		$array2 = $_POST['dna'];
 		$array2=explode(",",$array2);
 		$arrayMatriz = array();
+		$coincidencias = 0;
+		$encontradas = 0;
 		for($i=0; $i < sizeof($array2); $i++) 
 		{
 			$fila = str_split($array2[$i]);
@@ -36,7 +38,13 @@ class findMutants{
 					}
 				}
 			}
-		}		
+			if ($coincidencias = 4) {
+			$encontradas = $encontradas +1;
+			}
+		}
+		if ($encontradas >= 3) {
+			echo "ADN Mutante";
+		}
 	}
 	function recursividad($indice_i, $indice_j, $posicion, $array, $palabra_a_buscar) 
 	{
@@ -49,13 +57,14 @@ class findMutants{
 					{
 						if ($array[$i][$j] === $palabra_a_buscar[$posicion]) 
 						{
+							$coincidencias = $coincidencias + 1;
 							if ($posicion < strlen($palabra_a_buscar)) 
 							{
 								recursividad($i, $j, $posicion, $array, $palabra_a_buscar);
 							} 
 							else 
 							{
-								echo "La palabra existe";
+								break;
 							}
 						}
 					}
