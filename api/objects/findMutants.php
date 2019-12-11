@@ -4,6 +4,8 @@ class findMutants{
 	private $conn;
 	private $table_name = "adn";
 	public $adn;
+	public $palabra_a_buscar;
+	public $coincidencias;
 	public function __construct($db)
 	{
 	   $this->conn = $db;
@@ -12,7 +14,8 @@ class findMutants{
 	function esMutante()
 	{
 		$arrayCaracteres = array("A","T","G","C");
-		$array2 = $_POST['dna'];
+		//$array2 = $_POST['dna'];
+		$array2 = $this->adn;
 		$array2=explode(",",$array2);
 		$arrayMatriz = array();
 		$coincidencias = 0;
@@ -24,7 +27,7 @@ class findMutants{
 		}
 		for($p=0;$p < sizeof($arrayCaracteres); $p++){
 			$palabra_a_buscar = $arrayCaracteres[$p].$arrayCaracteres[$p].$arrayCaracteres[$p].$arrayCaracteres[$p];
-			echo "palabra:".$palabra_a_buscar."<br>";
+			//echo "palabra:".$palabra_a_buscar."<br>";
 			if (strlen($palabra_a_buscar) > 0) 
 			{
 				for ($i=0; $i < sizeof($arrayMatriz); $i++) 
@@ -33,7 +36,7 @@ class findMutants{
 					{
 						if ($arrayMatriz[$i][$j] === $palabra_a_buscar[0])
 						{
-							recursividad($i, $j, 0, $arrayMatriz, $palabra_a_buscar);
+							$this->recursividad($i, $j, 0, $arrayMatriz, $palabra_a_buscar);
 						}
 					}
 				}
@@ -43,39 +46,52 @@ class findMutants{
 			}
 		}
 		if ($encontradas >= 3) {
-			echo "ADN Mutante";
+			echo"guardar";
+			$mutante = true;
+			$this->guardarCadena($this->adn,$mutante);
+			return 1;
 		}
+		else
+		{
+			/*$mutante = 0;
+			this->guardarCadena($this->adn,$mutante);*/
+			return 0;
+		}
+
 	}
 	function recursividad($indice_i, $indice_j, $posicion, $array, $palabra_a_buscar) 
 	{
-			$posicion = $posicion+1;
-			for ($i=$indice_i-1; $i < $indice_i+2; $i++) 
-			{
-				for ($j=$indice_j-1; $j < $indice_j+2; $j++) 
+				$posicion = $posicion+1;
+				if($indice_i == 0 )
 				{
-					if (($i !== $indice_i) || ($j !== $indice_j)) 
+					$indice_i = 1;
+				}
+				if ($indice_j == 0) 
+				{
+					$indice_i = 1;
+				}
+				for ($i=$indice_i-1; $i < $indice_i+2; $i++) 
+				{
+					for ($j=$indice_j-1; $j < $indice_j+2; $j++) 
 					{
-						if ($array[$i][$j] === $palabra_a_buscar[$posicion]) 
+						if (($i !== $indice_i) || ($j !== $indice_j)) 
 						{
-							$coincidencias = $coincidencias + 1;
-							if ($posicion < strlen($palabra_a_buscar)) 
+							if ($array[$i][$j] === $palabra_a_buscar[$posicion]) 
 							{
-								recursividad($i, $j, $posicion, $array, $palabra_a_buscar);
-							} 
-							else 
-							{
-								break;
+								$coincidencias = $coincidencias + 1;
+								if ($posicion < strlen($palabra_a_buscar)) 
+								{
+									$this->recursividad($i, $j, $posicion, $array, $palabra_a_buscar);
+								} 
+								else 
+								{
+									break;
+								}
 							}
 						}
 					}
 				}
-			}
 	}
-
-	
-
-	
-	
 
 	function guardarCadena($adn,$mutante)
 	{
@@ -102,5 +118,5 @@ class findMutants{
 	     $stmt->execute();
 	     return true;
 	}
-}
+}	
 ?>
