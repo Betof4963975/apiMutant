@@ -45,16 +45,15 @@ class findMutants{
 			$encontradas = $encontradas +1;
 			}
 		}
-		if ($encontradas >= 3) {
-			echo"guardar";
+		if ($encontradas >= 3) {			
 			$mutante = true;
 			$this->guardarCadena($this->adn,$mutante);
 			return 1;
 		}
 		else
 		{
-			/*$mutante = 0;
-			this->guardarCadena($this->adn,$mutante);*/
+			$mutante = false;
+			this->guardarCadena($this->adn,$mutante);
 			return 0;
 		}
 
@@ -94,13 +93,9 @@ class findMutants{
 	}
 
 	function guardarCadena($adn,$mutante)
-	{
-		echo "Cadena a guardar =".$adn."<br>";
-		echo "Se encontro mutante =".$mutante."<br>";
-		echo "Tabla bd=".$this->table_name."<br>";
+	{		
 		$database = new Database();
 		$db = $database->getConnection();
-
 		if ($mutante == true) {
 			$mutante = 1;
 		}
@@ -111,7 +106,6 @@ class findMutants{
 	             " . $this->table_name . "
 	             SET
 	              cadenas_adn=:cadenas_adn, es_mutante=:es_mutante";
-
 	     $stmt = $db->prepare($query);
 	     $stmt->bindParam(":cadenas_adn", $adn);
 	     $stmt->bindParam(":es_mutante", $mutante);
