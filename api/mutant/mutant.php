@@ -10,7 +10,7 @@ $db = $database->getConnection();
 $findMutants = new findMutants($db);
 
 $findMutants->adn = $_POST['dna'];
-if ($findMutants->esMutante() > 0) {
+if ($findMutants->esMutante() == true) {
 	echo"Es Mutante";
 	http_response_code(200);
 }
