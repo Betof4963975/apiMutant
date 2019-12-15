@@ -2,9 +2,12 @@
 class Database{
  
     // specify your own database credentials
-    private $host = "localhost";
-    private $db_name = "mutantes_db";
-    private $username = "root";
+    //private $host = "localhost";
+    private $host ="database-mutants.cwmqb0ncizfs.sa-east-1.rds.amazonaws.com";
+    //private $db_name = "mutantes_db";
+    private $db_name = "database-mutants";
+    //private $username = "root";
+    private $username = "admin";
     private $password = "";
     public $conn;
  
