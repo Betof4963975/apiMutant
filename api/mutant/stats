@@ -2,20 +2,6 @@
 // include database and object files
 include_once $_SERVER['DOCUMENT_ROOT'].'/api/config/dbMutantes.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/api/objects/findMutants.php';
-// get database connection
-$database = new Database();
-$db = $database->getConnection();
-$findMutants = new findMutants($db);
-$findMutants->adn = $_POST['dna'];
-if ($findMutants->esMutante() == true) {
-	echo"Es Mutante";
-	http_response_code(200);
-}
-else{
-	echo"es Humano";
-	http_response_code(403);
-}
-
 function buscar($mutante)
 	{		
 		$database = new Database();
@@ -26,18 +12,26 @@ function buscar($mutante)
 		else{
 			$mutante = 0;
 		}
-		$query = "SELECT *
-			FROM
-			 " . $this->table_name . "
-			 WHERE 
-		$query = "INSERT INTO
-	             " . $this->table_name . "
-	             SET
-	              cadenas_adn=:cadenas_adn, es_mutante=:es_mutante";
-	     $stmt = $db->prepare($query);
-	     $stmt->bindParam(":cadenas_adn", $adn);
-	     $stmt->bindParam(":es_mutante", $mutante);
-	     $stmt->execute();
-	     return true;
+		$query = "SELECT COUNT(es_mutante) FROM adn WHERE es_mutante =";
+		$query .= $query.$mutante;
+		$stmt = $db->prepare($query);
+		$resultado = $stmt->execute();
+		return $resultado;
 	}
+$esMutante = 1;
+$cantMutante = buscar($esMutante);
+$esMutante = 0;
+$cantHumano = buscar($esMutante);
+$ratioMutantes = ($cantMutante + $cantHumano)/$cantMutante;
+
+$respuesta = array(
+	"count_mutant_dna"=>$cantMutante,
+	"count_human_dna =>$cantHumano,
+	"ratio" => $ratioMutantes,
+	);
+
+$Respuesta2= json_encode($respuesta);
+
+return $Respuesta2;
+
 ?>
