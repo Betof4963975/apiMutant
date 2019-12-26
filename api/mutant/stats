@@ -15,4 +15,29 @@ else{
 	echo"es Humano";
 	http_response_code(403);
 }
+
+function buscar($mutante)
+	{		
+		$database = new Database();
+		$db = $database->getConnection();
+		if ($mutante == true) {
+			$mutante = 1;
+		}
+		else{
+			$mutante = 0;
+		}
+		$query = "SELECT *
+			FROM
+			 " . $this->table_name . "
+			 WHERE 
+		$query = "INSERT INTO
+	             " . $this->table_name . "
+	             SET
+	              cadenas_adn=:cadenas_adn, es_mutante=:es_mutante";
+	     $stmt = $db->prepare($query);
+	     $stmt->bindParam(":cadenas_adn", $adn);
+	     $stmt->bindParam(":es_mutante", $mutante);
+	     $stmt->execute();
+	     return true;
+	}
 ?>
