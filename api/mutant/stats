@@ -5,8 +5,8 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/api/objects/findMutants.php';
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
-$estadisticas = new findMutants($db);
-
+$findMutants = new findMutants($db);
+$findMutants->adn = $_POST['dna'];
 if ($findMutants->esMutante() == true) {
 	echo"Es Mutante";
 	http_response_code(200);
